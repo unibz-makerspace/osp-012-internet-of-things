@@ -64,10 +64,10 @@ void setup() {
 
 	// try to connect to io.adafruit.com
 	io.connect();
-	for (int i = 1; i <= 3; i++) {
+	for (int i = 1; i <= 20; i++) {
 		if (io.status() < AIO_CONNECTED) {
 			Serial.print(".");
-			delay(i * 500);
+			delay(i * 10);
 		}
 	}
 	Serial.print(' ');
@@ -90,7 +90,7 @@ void loop() {
 	// save a random value to the 'graph' feed on Adafruit IO
 	long value = random(0, 100);
 	Serial.println(value);
-	graph->save(random(0, 100));
+	graph->save(value);
 
 	// wait one second (1000 milliseconds == 1 second)
 	delay(1000);
