@@ -55,22 +55,21 @@
 /************************ Example Starts Here *******************************/
 
 // set up the 'graph' feed
-AdafruitIO_Feed * graph = io.feed("graph");
+AdafruitIO_Feed * graphFeed = io.feed("graph");
 
 void setup() {
 	// use serial port for printing messages
 	Serial.begin(115200);
 	while (!Serial);
-
-	// try to connect to io.adafruit.com
+	
+	// connect to io.adafruit.com
 	io.connect();
-	for (int i = 1; i <= 20; i++) {
-		if (io.status() < AIO_CONNECTED) {
-			Serial.print(".");
-			delay(i * 10);
-		}
+	// wait for a connection
+	while (io.status() < AIO_CONNECTED) {
+		Serial.print(".");
+		delay(500);
 	}
-	Serial.print(' ');
+	Serial.println();
 	Serial.println(io.statusText());
 
 	// if analog input pin 0 is unconnected, random analog
@@ -90,7 +89,7 @@ void loop() {
 	// save a random value to the 'graph' feed on Adafruit IO
 	long value = random(0, 100);
 	Serial.println(value);
-	graph->save(value);
+	graphFeed->save(value);
 
 	// wait one second (1000 milliseconds == 1 second)
 	delay(1000);
