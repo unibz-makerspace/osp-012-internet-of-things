@@ -12,7 +12,11 @@
 #define CONFIG_H
 
 /******************* DHT11 Humidity Sensor Config **************************/
-#define DHT11_PIN 2
+#define DHT_PIN 5
+// Uncomment whatever type you're using!
+#define DHT_TYPE DHT11   // DHT 11
+//#define DHT_TYPE DHT22   // DHT 22  (AM2302), AM2321
+//#define DHT_TYPE DHT21   // DHT 21 (AM2301)
 
 /************************ Adafruit IO Config *******************************/
 
@@ -55,8 +59,8 @@
 AdafruitIO_Ethernet io(IO_USERNAME, IO_KEY);
 
 /********************** DHT11 Humidity Sensor *****************************/
-#include <dht.h>
-dht DHT;
+#include <DHT.h>
+DHT dht(DHT_PIN, DHT_TYPE);
 
 /*************************** Heat Index ***********************************/
 #define C1 -8.784695

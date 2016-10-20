@@ -61,7 +61,7 @@ void setup() {
 	// use serial port for printing messages
 	Serial.begin(115200);
 	while (!Serial);
-	
+
 	// connect to io.adafruit.com
 	io.connect();
 	// wait for a connection
@@ -71,6 +71,9 @@ void setup() {
 	}
 	Serial.println();
 	Serial.println(io.statusText());
+
+	// initialize DHT sensor
+	dht.begin();
 }
 
 void loop() {
@@ -80,31 +83,29 @@ void loop() {
 	// io.adafruit.com, and processes any incoming data.
 	io.run();
 
-	// read the sensor data and check if everything is ok
-	int errorCode = DHT.read11(DHT11_PIN);
-	if (errorCode == DHTLIB_OK) {
+	// wait a few seconds between DHT sensor measurements
+	delay(2000);
 
-		// get the sensor values
-		double RH = DHT.humidity; // from 20% to 90%
-		double T = DHT.temperature; // from 0°C to 50°C
+	// sensor readings are up to 2 seconds 'old' (its a very slow sensor)
+	double RH = dht.readHumidity(); // from 20% to 90%
+	double T = dht.readTemperature();; // from 0°C to 50°C
 
-		// print sensor values
-		Serial.print(RH, 0);
-		Serial.print("%\t");
-		Serial.print(T, 0);
-		Serial.print("°C\t");
+	// print sensor values
+	Serial.print(RH, 0);
+	Serial.print("% ");
+	Serial.print(T, 0);
+	Serial.print((char) 176); // degree symbol
+	Serial.print("C\t");
 
-		// calculate heat index
-		double HI =
-			C1 + C2 * T + C3 * RH + C4 * T * RH +
-			C5 * pow(T, 2) + C6 * pow(RH, 2) +
-			C7 * pow(T, 2) * RH + C8 * T * pow(RH, 2) +
-			C9 * pow(T, 2) * pow(RH, 2);
+	// calculate heat index
+	double HI =
+		C1 + C2 * T + C3 * RH + C4 * T * RH +
+		C5 * pow(T, 2) + C6 * pow(RH, 2) +
+		C7 * pow(T, 2) * RH + C8 * T * pow(RH, 2) +
+		C9 * pow(T, 2) * pow(RH, 2);
 
-		// save heat index value to the 'graph' feed on Adafruit IO
-		Serial.print("HI = ");
-		Serial.println(HI);
-		graphFeed->save(HI);
-
-	}
+	// save heat index value to the 'graph' feed on Adafruit IO
+	Serial.print("HI = ");
+	Serial.println(HI);
+	graphFeed->save(HI);
 }
