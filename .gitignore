@@ -48,3 +48,6 @@ ipch/
 # Visual Studio profiler
 *.psess
 *.vsp
+
+# Adafruit libraries
+.tests/
