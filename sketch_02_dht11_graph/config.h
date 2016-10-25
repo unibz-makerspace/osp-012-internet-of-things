@@ -72,5 +72,8 @@ DHT dht(DHT_PIN, DHT_TYPE);
 #define C7  2.211732e-3
 #define C8  7.2546e-4
 #define C9 -3.582e-6
-
+#define D1 13.12
+#define D2 0.6215
+#define D3 -11.37
+#define D4 0.3965
 #endif // CONFIG_H

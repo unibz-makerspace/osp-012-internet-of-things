@@ -88,24 +88,35 @@ void loop() {
 
 	// sensor readings are up to 2 seconds 'old' (its a very slow sensor)
 	double RH = dht.readHumidity(); // from 20% to 90%
-	double T = dht.readTemperature();; // from 0°C to 50°C
-
+	double T = dht.readTemperature();; // from 0ï¿½C to 50ï¿½C
+  double V = 0.5; // m/sec
 	// print sensor values
 	Serial.print(RH, 0);
 	Serial.print("% ");
 	Serial.print(T, 0);
 	Serial.print((char) 176); // degree symbol
 	Serial.print("C\t");
-
-	// calculate heat index
-	double HI =
-		C1 + C2 * T + C3 * RH + C4 * T * RH +
-		C5 * pow(T, 2) + C6 * pow(RH, 2) +
-		C7 * pow(T, 2) * RH + C8 * T * pow(RH, 2) +
-		C9 * pow(T, 2) * pow(RH, 2);
-
+  Serial.print(V);
+     double HI = 0;
+     double KI = 0;
+  if(T>20){
+	// calculate heat index 
+      HI = 
+		  C1 + C2 * T + C3 * RH + C4 * T * RH +
+		  C5 * pow(T, 2) + C6 * pow(RH, 2) +
+		  C7 * pow(T, 2) * RH + C8 * T * pow(RH, 2) +
+		  C9 * pow(T, 2) * pow(RH, 2);
+ 
+  
+  }else{
+      KI = 
+      D1 + D2 * T + D3 * pow(V,0.16) + D4 * T * pow(V,0.16);
+  }
 	// save heat index value to the 'graph' feed on Adafruit IO
 	Serial.print("HI = ");
 	Serial.println(HI);
+  Serial.print("KI = ");
+  Serial.println(KI);
 	graphFeed->save(HI);
+  graphFeed->save(KI);
 }
