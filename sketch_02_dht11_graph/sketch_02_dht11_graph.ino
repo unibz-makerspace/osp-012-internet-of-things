@@ -54,23 +54,22 @@
 
 /************************ Example Starts Here *******************************/
 
-// set up the 'graph' feed
-AdafruitIO_Feed * graphFeed = io.feed("graph");
+// set up the 'graph' feeds they must be created on io.adafruit.com
+AdafruitIO_Feed * graphHIFeed = io.feed("graphHI");
+AdafruitIO_Feed * graphKIFeed = io.feed("graphKI");
 
 void setup() {
 	// use serial port for printing messages
 	Serial.begin(115200);
 	while (!Serial);
 
-	// connect to io.adafruit.com
-	io.connect();
-	// wait for a connection
-	while (io.status() < AIO_CONNECTED) {
-		Serial.print(".");
-		delay(500);
-	}
-	Serial.println();
-	Serial.println(io.statusText());
+  Serial.println();
+  if(INTERNET_HW){
+    Serial.println("Connecting to Adafruit IO");
+	  connectIO();
+  }else{
+    Serial.println("No internet connection");
+  }
 
 	// initialize DHT sensor
 	dht.begin();
@@ -81,42 +80,60 @@ void loop() {
 	// it should always be present at the top of your loop
 	// function. it keeps the client connected to
 	// io.adafruit.com, and processes any incoming data.
-	io.run();
+	if(INTERNET_HW) io.run();
 
 	// wait a few seconds between DHT sensor measurements
 	delay(2000);
 
 	// sensor readings are up to 2 seconds 'old' (its a very slow sensor)
 	double RH = dht.readHumidity(); // from 20% to 90%
-	double T = dht.readTemperature();; // from 0�C to 50�C
-  double V = 0.5; // m/sec
+	double T = dht.readTemperature();; // from 0°C to 50°C
+  double V = 0.5; // wind speed m/sec
 	// print sensor values
 	Serial.print(RH, 0);
 	Serial.print("% ");
 	Serial.print(T, 0);
-	Serial.print((char) 176); // degree symbol
+	Serial.print("°"); // degree symbol
 	Serial.print("C\t");
   Serial.print(V);
+  Serial.print("m/s\t");
      double HI = 0;
      double KI = 0;
   if(T>20){
 	// calculate heat index 
-      HI = 
-		  C1 + C2 * T + C3 * RH + C4 * T * RH +
-		  C5 * pow(T, 2) + C6 * pow(RH, 2) +
-		  C7 * pow(T, 2) * RH + C8 * T * pow(RH, 2) +
-		  C9 * pow(T, 2) * pow(RH, 2);
- 
-  
+      HI = heatIndex(T, RH);
+      Serial.print("HI = ");
+      Serial.println(HI);
+      if(INTERNET_HW) graphHIFeed->save(HI);
   }else{
-      KI = 
-      D1 + D2 * T + D3 * pow(V,0.16) + D4 * T * pow(V,0.16);
+      KI = windChill(T,V);
+      Serial.print("KI = ");
+      Serial.println(KI);
+      if(INTERNET_HW) graphKIFeed->save(KI);
   }
-	// save heat index value to the 'graph' feed on Adafruit IO
-	Serial.print("HI = ");
-	Serial.println(HI);
-  Serial.print("KI = ");
-  Serial.println(KI);
-	graphFeed->save(HI);
-  graphFeed->save(KI);
 }
+
+double heatIndex(double T, double RH) {
+  return 
+    C1 + C2 * T + C3 * RH + C4 * T * RH +
+    C5 * pow(T, 2) + C6 * pow(RH, 2) +
+    C7 * pow(T, 2) * RH + C8 * T * pow(RH, 2) +
+    C9 * pow(T, 2) * pow(RH, 2);
+}
+
+double windChill(double T, double V) {
+  return D1 + D2 * T + D3 * pow(V,0.16) + D4 * T * pow(V,0.16);
+}
+
+void connectIO() {
+    // connect to io.adafruit.com
+    io.connect();
+    // wait for a connection
+    while (io.status() < AIO_CONNECTED) {
+      Serial.print(".");
+      delay(500);
+    }
+    Serial.println("done: ");
+    Serial.println(io.statusText());
+}
+

@@ -51,3 +51,4 @@ ipch/
 
 # Adafruit libraries
 .tests/
+io-id.h

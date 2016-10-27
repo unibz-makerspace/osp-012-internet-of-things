@@ -18,12 +18,20 @@
 //#define DHT_TYPE DHT22   // DHT 22  (AM2302), AM2321
 //#define DHT_TYPE DHT21   // DHT 21 (AM2301)
 
+/************************* Internet hardware *******************************/
+
+// change to 1 if the Ethernet shield is installed
+//
+#define INTERNET_HW    0
+
 /************************ Adafruit IO Config *******************************/
 
 // visit io.adafruit.com if you need to create an account,
 // or if you need your Adafruit IO key.
 #define IO_USERNAME    "your_username"
 #define IO_KEY         "your_key"
+
+// #include "io-id.h" // put auth key in a unversioned file
 
 /******************************* WIFI **************************************/
 
