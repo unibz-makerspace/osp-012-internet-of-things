@@ -55,8 +55,13 @@
 
 // the AdafruitIO_Ethernet client will work with the following boards:
 //   - Ethernet FeatherWing -> https://www.adafruit.com/products/3201
-#include "AdafruitIO_Ethernet.h"
-AdafruitIO_Ethernet io(IO_USERNAME, IO_KEY);
+//#include "AdafruitIO_Ethernet.h"
+//AdafruitIO_Ethernet io(IO_USERNAME, IO_KEY);
+
+byte MAC[] = { 0x90, 0xa2, 0xda, 0x10, 0x21, 0xc7 };
+
+#include "AdafruitIOHack.h"
+AdafruitIOHack io(IO_USERNAME, IO_KEY, MAC);
 
 /********************** DHT11 Humidity Sensor *****************************/
 #include <DHT.h>
