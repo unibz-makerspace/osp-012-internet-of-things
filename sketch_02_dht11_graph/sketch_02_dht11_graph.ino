@@ -55,8 +55,8 @@
 /************************ Example Starts Here *******************************/
 
 // set up the 'graph' feed
-AdafruitIO_Feed * hiGraphFeed = io.feed("hi");
-AdafruitIO_Feed * kiGraphFeed = io.feed("ki");
+AdafruitIO_Feed * graphHIFeed = io.feed("graphHI");
+AdafruitIO_Feed * graphKIFeed = io.feed("graphKI");
 
 void setup() {
 	// use serial port for printing messages
@@ -119,6 +119,6 @@ void loop() {
 	Serial.print(HI);
   Serial.print(" KI = ");
   Serial.println(KI);
-	hiGraphFeed->save(HI);
-  kiGraphFeed->save(KI);
+	graphHIFeed->save(HI);
+  graphKIFeed->save(KI);
 }
