@@ -55,7 +55,8 @@
 /************************ Example Starts Here *******************************/
 
 // set up the 'graph' feed
-AdafruitIO_Feed * graphFeed = io.feed("graph");
+AdafruitIO_Feed * hiGraphFeed = io.feed("hi");
+AdafruitIO_Feed * kiGraphFeed = io.feed("ki");
 
 void setup() {
 	// use serial port for printing messages
@@ -95,8 +96,9 @@ void loop() {
 	Serial.print("% ");
 	Serial.print(T, 0);
 	Serial.print((char) 176); // degree symbol
-	Serial.print("C\t");
+	Serial.print("C ");
   Serial.print(V);
+  Serial.print("m/s\t");
      double HI = 0;
      double KI = 0;
   if(T>20){
@@ -114,9 +116,9 @@ void loop() {
   }
 	// save heat index value to the 'graph' feed on Adafruit IO
 	Serial.print("HI = ");
-	Serial.println(HI);
-  Serial.print("KI = ");
+	Serial.print(HI);
+  Serial.print(" KI = ");
   Serial.println(KI);
-	graphFeed->save(HI);
-  graphFeed->save(KI);
+	hiGraphFeed->save(HI);
+  kiGraphFeed->save(KI);
 }
