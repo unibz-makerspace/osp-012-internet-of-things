@@ -54,9 +54,9 @@
 
 /************************ Example Starts Here *******************************/
 
-// set up the 'graph' feeds they must be created on io.adafruit.com
-AdafruitIO_Feed * graphHIFeed = io.feed("graphHI");
-AdafruitIO_Feed * graphKIFeed = io.feed("graphKI");
+// set up the 'graph' feed
+AdafruitIO_Feed * graphHIFeed = io.feed("graphhi");
+AdafruitIO_Feed * graphKIFeed = io.feed("graphki");
 
 void setup() {
 	// use serial port for printing messages
